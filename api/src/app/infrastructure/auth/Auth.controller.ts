@@ -1,4 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { IUsuáriosRepository } from '../repositories/UsuáriosRepository';
+import { RegistrarUsuárioCaso } from '../../casos-de-uso/RegistrarUsuario.caso';
 
 class RegisterRequest {
   email: string;
@@ -7,12 +9,19 @@ class RegisterRequest {
 
 @Controller()
 export class AuthController {
+  constructor(
+    @Inject('IUsuáriosRepository')
+    private readonly usuáriosRepository: IUsuáriosRepository,
+  ) {}
+
   @Post('/auth/registrar')
   async login(@Body('usuario') body: RegisterRequest) {
-    return {
-      usuario: {
-        email: body.email,
-      },
-    };
+    const registrarUsuárioCaso = new RegistrarUsuárioCaso(
+      this.usuáriosRepository,
+    );
+    return registrarUsuárioCaso.executar({
+      email: body.email,
+      senha: body.senha,
+    });
   }
 }

@@ -2,9 +2,13 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { IUsuáriosRepository } from '../src/app/infrastructure/repositories/UsuáriosRepository';
+import { PrismaService } from '../src/app/infrastructure/repositories/Prisma.service';
 
 describe('Registrar usuário', () => {
   let app: INestApplication;
+  let userRepository: IUsuáriosRepository;
+  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -12,10 +16,23 @@ describe('Registrar usuário', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    userRepository = moduleFixture.get<IUsuáriosRepository>(
+      'IUsuáriosRepository',
+    );
+    prismaService = moduleFixture.get<PrismaService>(PrismaService);
     await app.init();
+    await prismaService.credencial.deleteMany({}).then(() => {
+      prismaService.usuario.deleteMany({});
+    });
   });
 
-  it('Retorna usuário quando registra', () => {
+  afterEach(async () => {
+    await prismaService.credencial.deleteMany({}).then(() => {
+      prismaService.usuario.deleteMany({});
+    });
+  });
+
+  it('Retorna usuário quando registra', async () => {
     expect.assertions(1);
     return request(app.getHttpServer())
       .post('/auth/registrar')
@@ -27,14 +44,29 @@ describe('Registrar usuário', () => {
       })
       .expect(201)
       .expect((res) => {
-        console.log(res.body);
-        return expect(res.body).toEqual(
+        expect(res.body).toEqual(
           expect.objectContaining({
-            usuario: {
-              email: 'fulane.silveira@gmail.com',
-            },
+            email: 'fulane.silveira@gmail.com',
+            uuid: expect.stringMatching(/\S+/),
           }),
         );
+      });
+  });
+
+  it('Salva usuário no banco', () => {
+    expect.assertions(1);
+    return request(app.getHttpServer())
+      .post('/auth/registrar')
+      .send({
+        usuario: {
+          email: 'fulane.silveira@gmail.com',
+          senha: 'senha de fulane',
+        },
+      })
+      .expect(201)
+      .expect(async (res) => {
+        const savedUser = await userRepository.emailExiste(res.body.email);
+        return expect(savedUser).toEqual(true);
       });
   });
 });

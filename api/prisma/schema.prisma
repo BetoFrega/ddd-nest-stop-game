@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Usuario {
+  uuid        String        @id
+  credenciais Credencial[]
+}
+
+model Credencial {
+  chave_de_busca String
+  valor_crypto   String
+  tipo_de_chave  String
+  id_usuario     String
+  usuario        Usuario @relation(fields: [id_usuario], references: [uuid])
+
+  @@id([chave_de_busca, tipo_de_chave])
+  @@unique([chave_de_busca, tipo_de_chave], name: "credenciais_chave_de_busca_tipo_de_chave_uindex")
+}
+
+
