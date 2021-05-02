@@ -7,7 +7,7 @@ export const criptografarSenha = (
   return bcrypt.hash(senhaCrua, rodadas);
 };
 
-export const descriptografarSenha = (
+export const validarSenha = (
   password: string,
   passwordHash: string,
 ): Promise<boolean> => {

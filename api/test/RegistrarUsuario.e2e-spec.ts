@@ -35,12 +35,10 @@ describe('Registrar usuário', () => {
   it('Retorna usuário quando registra', async () => {
     expect.assertions(1);
     return request(app.getHttpServer())
-      .post('/auth/registrar')
+      .post('/auth/cadastro')
       .send({
-        usuario: {
-          email: 'fulane.silveira@gmail.com',
-          senha: 'senha de fulane',
-        },
+        email: 'fulane.silveira@gmail.com',
+        senha: 'senha de fulane',
       })
       .expect(201)
       .expect((res) => {
@@ -56,12 +54,10 @@ describe('Registrar usuário', () => {
   it('Salva usuário no banco', () => {
     expect.assertions(1);
     return request(app.getHttpServer())
-      .post('/auth/registrar')
+      .post('/auth/cadastro')
       .send({
-        usuario: {
-          email: 'fulane.silveira@gmail.com',
-          senha: 'senha de fulane',
-        },
+        email: 'fulane.silveira@gmail.com',
+        senha: 'senha de fulane',
       })
       .expect(201)
       .expect(async (res) => {
@@ -70,15 +66,13 @@ describe('Registrar usuário', () => {
       });
   });
 
-  fit('Retorna JWT quando registra', async () => {
+  it('Retorna JWT quando registra', async () => {
     expect.assertions(1);
     return request(app.getHttpServer())
-      .post('/auth/registrar')
+      .post('/auth/cadastro')
       .send({
-        usuario: {
-          email: 'fulane.silveira@gmail.com',
-          senha: 'senha de fulane',
-        },
+        email: 'fulane.silveira@gmail.com',
+        senha: 'senha de fulane',
       })
       .expect(201)
       .expect((res) => {

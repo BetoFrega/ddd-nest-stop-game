@@ -1,6 +1,9 @@
 import { PrismaService } from './Prisma.service';
 import { gerarIdentificadorÚnico } from '../../../shared/gerarIdentificadorUnico';
-import { criptografarSenha } from '../../../shared/criptografiaSenha';
+import {
+  criptografarSenha,
+  validarSenha,
+} from '../../../shared/criptografiaSenha';
 import { plainToClass } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
 import { Usuário } from '../../dominios/Usuario';
@@ -16,11 +19,30 @@ export interface IUsuáriosRepository {
     senha: string;
     email: string;
   }): Promise<Usuário>;
+
+  validarEmailSenha(username: string, password: string): Promise<Usuário>;
 }
 
 @Injectable()
 export class UsuáriosRepository implements IUsuáriosRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async validarEmailSenha(email: string, password: string): Promise<Usuário> {
+    const credencial = await this.prisma.credencial.findFirst({
+      where: {
+        tipo_de_chave: TipoDeChaveCredencial.EMAIL,
+        chave_de_busca: email,
+      },
+      include: {
+        usuario: true,
+      },
+    });
+    if (await validarSenha(password, credencial.valor_crypto)) {
+      return plainToClass(Usuário, {
+        email: email,
+      });
+    }
+  }
 
   async emailExiste(email: string): Promise<boolean> {
     const credencial = await this.prisma.credencial.findFirst({

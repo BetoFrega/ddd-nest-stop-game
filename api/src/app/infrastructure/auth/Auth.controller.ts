@@ -1,27 +1,25 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Controller, Inject, Post, Request, UseGuards } from '@nestjs/common';
 import { IUsuáriosRepository } from '../repositories/UsuáriosRepository';
-import { RegistrarUsuárioCaso } from '../../casos-de-uso/RegistrarUsuario.caso';
-
-class RegisterRequest {
-  email: string;
-  senha: string;
-}
+import { LocalAuthGuard } from './RegisterLocalAuth.guard';
+import { AuthService } from './Auth.service';
 
 @Controller()
 export class AuthController {
   constructor(
     @Inject('IUsuáriosRepository')
     private readonly usuáriosRepository: IUsuáriosRepository,
+    private readonly authService: AuthService,
   ) {}
 
-  @Post('/auth/registrar')
-  async login(@Body('usuario') body: RegisterRequest) {
-    const registrarUsuárioCaso = new RegistrarUsuárioCaso(
-      this.usuáriosRepository,
-    );
-    return registrarUsuárioCaso.executar({
-      email: body.email,
-      senha: body.senha,
-    });
+  @UseGuards(LocalAuthGuard)
+  @Post('/auth/cadastro')
+  async cadastro(@Request() request) {
+    return {
+      ...request.user,
+      jwt: this.authService.generateJWT({
+        email: request.user.email,
+        uuid: request.user.uuid,
+      }).access_token,
+    };
   }
 }
