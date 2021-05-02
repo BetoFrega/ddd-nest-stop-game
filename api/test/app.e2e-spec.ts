@@ -15,9 +15,13 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/registrar (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .post('/')
+      .send({
+        usuario: 'roberto',
+        senha: '12345',
+      })
       .expect(200)
       .expect('Hello World!');
   });
