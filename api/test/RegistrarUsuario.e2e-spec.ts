@@ -15,19 +15,24 @@ describe('Registrar usuário', () => {
     await app.init();
   });
 
-  it('Registrar usuário', () => {
+  it('Retorna usuário quando registra', () => {
     expect.assertions(1);
     return request(app.getHttpServer())
-      .post('auth/registrar')
+      .post('/auth/registrar')
       .send({
-        email: 'fulane.silveira@gmail.com',
-        senha: 'senha de fulane',
+        usuario: {
+          email: 'fulane.silveira@gmail.com',
+          senha: 'senha de fulane',
+        },
       })
-      .expect(200)
+      .expect(201)
       .expect((res) => {
-        return expect(JSON.parse(res.body)).toEqual(
+        console.log(res.body);
+        return expect(res.body).toEqual(
           expect.objectContaining({
-            email: 'fulane.silveira@gmail.com',
+            usuario: {
+              email: 'fulane.silveira@gmail.com',
+            },
           }),
         );
       });
