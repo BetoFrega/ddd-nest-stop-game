@@ -84,5 +84,25 @@ describe('Autenticação', () => {
           );
         });
     });
+  }); // end: describe registro
+
+  describe('login', () => {
+    it('Retorna JWT quando faz login', async () => {
+      expect.assertions(1);
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          email: 'fulane.silveira@gmail.com',
+          senha: 'senha de fulane',
+        })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).toEqual(
+            expect.objectContaining({
+              jwt: expect.stringMatching(/\S+/),
+            }),
+          );
+        });
+    });
   });
 });
