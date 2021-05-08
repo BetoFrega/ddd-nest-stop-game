@@ -6,7 +6,7 @@
   "scripts": {
     "test": "yarn workspace @stop-game/api test",
     "start-dev-api": "yarn workspace @stop-game/api start:dev",
-    "start-dev-client":"yarn workspace @stop-game/client dev",
+    "start-dev-client": "yarn workspace @stop-game/client dev",
     "start-dev": "concurrently \"yarn:start-dev-*\""
   },
   "repository": {
@@ -24,7 +24,8 @@
   ],
   "private": true,
   "devDependencies": {
-    "prettier": "^2.2.1",
-    "concurrently": "^6.0.2"
+    "@cucumber/cucumber": "^7.2.1",
+    "concurrently": "^6.0.2",
+    "prettier": "^2.2.1"
   }
 }
