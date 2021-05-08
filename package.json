@@ -1,10 +1,13 @@
 {
-  "name": "ddd-nest-stop-game",
+  "name": "nest-stop",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "yarn workspace api test"
+    "test": "yarn workspace @stop-game/api test",
+    "start-dev-api": "yarn workspace @stop-game/api start:dev",
+    "start-dev-client":"yarn workspace @stop-game/client dev",
+    "start-dev": "concurrently \"yarn:start-dev-*\""
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,7 @@
   ],
   "private": true,
   "devDependencies": {
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "concurrently": "^6.0.2"
   }
 }
