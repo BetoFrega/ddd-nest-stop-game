@@ -1,8 +1,8 @@
 {
-  "name": "ddd-nest-stop-game-api",
+  "name": "@stop-game/api",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "@fregadev",
   "private": true,
   "license": "UNLICENSED",
   "engines": {
@@ -41,6 +41,7 @@
     "uniqid": "^5.3.0"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^7.2.1",
     "@nestjs/cli": "^7.6.0",
     "@nestjs/schematics": "^7.3.0",
     "@nestjs/testing": "^7.6.15",
