@@ -16,6 +16,10 @@
     "url": "https://github.com/fregadev/ddd-nest-stop-game/issues"
   },
   "homepage": "https://github.com/fregadev/ddd-nest-stop-game#readme",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
   "devDependencies": {
     "prettier": "^2.2.1"
   }
